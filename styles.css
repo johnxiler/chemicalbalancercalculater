@@ -1,0 +1,159 @@
+/* styles.css
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 40px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2em;
+  color: #007BFF;
+}
+
+#inputFormula {
+  width: 100%;
+  height: 150px;
+  margin-bottom: 20px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-size: 1em;
+}
+
+button[type="submit"] {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+#message,
+#balanced,
+#codeOutput {
+  margin-top: 20px;
+  font-size: 1em;
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    padding: 20px;
+  }
+} */
+
+/* styles.css */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 40px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.5em;
+  color: #007BFF;
+}
+
+#inputFormula {
+  width: 100%;
+  height: 150px;
+  margin-bottom: 20px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-size: 3em;
+  resize: none;
+  /* Prevent resizing */
+}
+
+.btn-equation {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+  /* Add space above the button */
+}
+
+.btn-equation:hover {
+  background-color: #0056b3;
+}
+
+#labels,
+#message,
+#balanced,
+#codeOutput {
+  margin-top: 20px;
+  font-size: 1.2em;
+}
+
+#equationContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#equationContainer div {
+  /* Space between equations */
+  margin: 0.2rem 20rem;
+  padding: 5px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  /* cursor: pointer; */
+}
+
+#equationContainer div:hover {
+  background-color: #d0d0d0;
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    padding: 20px;
+  }
+
+  #inputFormula {
+    font-size: 2em;
+  }
+
+  #equationContainer {
+    width: 100%;
+    display: inline-block;
+  }
+
+  #equationContainer div {
+    /* Space between equations */
+    margin: 0.1rem;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  #equationContainer {
+    width: 100%;
+    display: block;
+  }
+
+  #equationContainer div {
+    /* Space between equations */
+    margin: 0.1rem;
+  }
+}

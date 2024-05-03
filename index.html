@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chemical Equation Balancer</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js"></script>
+</head>
+
+<body>
+  <!DOCTYPE html>
+  <html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemical Equation Balancer</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js"></script>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Chemical Equation Balancer</h1>
+      <textarea id="inputFormula"
+        placeholder="Enter an equation of a chemical reaction and click 'Balance'. The answer will appear below... e.g., H2 + O2 = H2O"></textarea>
+      <button class="btn-equation" onclick="demo(document.getElementById('inputFormula').value)">Balance</button>
+      <div id="labels">Balanced Equation:</div>
+      <div id="message"></div>
+      <div id="balanced"></div>
+      <div id="codeOutput"></div>
+      <label for="text">Click each Equation to Balance.</label>
+      <div id="equationContainer" style="cursor: pointer;"></div>
+    </div>
+
+    <script>
+      // Example: Display the first equation from the RANDOM_DEMOS array
+      // demo(RANDOM_DEMOS[0], 0);
+      // Assuming RANDOM_DEMOS is defined somewhere in your app.js or similar
+      var container = document.createElement('div'); // Create a container for the clickable elements
+      container.id = 'equationContainer'; // Assign an ID to the container for easy reference
+      document.body.appendChild(container); // Append the container to the body
+
+      RANDOM_DEMOS.forEach(function (equation, index) {
+        var div = document.createElement('div');
+        div.innerText = equation;
+        div.style.cursor = 'pointer';
+        div.addEventListener('click', function () {
+          document.getElementById('inputFormula').value = equation;
+          balance(equation); // Assuming balance is a function that balances the equation
+        });
+        container.appendChild(div); // Append the div to the container
+      });
+    </script>
+  </body>
+
+  </html>
