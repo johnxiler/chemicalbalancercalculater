@@ -1,8 +1,14 @@
 "use strict";
 /* Main functions, which are the entry points from the HTML code */
+// Function to replace "->" with "→"
+function replaceArrow(str) {
+  return str.replace(/->/g, "→");
+}
 
 // Balances the given formula string and sets the HTML output on the page. Returns nothing.
 function balance(formulaStr) {
+  // Replace "->" with "→"
+  formulaStr = replaceArrow(formulaStr);
   // Clear output
   setMessage("");
   var balancedElem = document.getElementById("balanced");
@@ -12,23 +18,63 @@ function balance(formulaStr) {
   appendText(" ", codeOutElem);
 
   // Parse equation
+  // var eqn;
+  // try {
+  //   eqn = parse(formulaStr);
+  // } catch (e) {
+  //   if (typeof e == "string") {  // Simple error message string
+  //     setMessage("Syntax error: " + e);
+
+  //   } else if ("start" in e) {  // Error message object with start and possibly end character indices
+  //     setMessage("Syntax error: " + e.message);
+
+  //     var start = e.start;
+  //     var end = "end" in e ? e.end : e.start;
+  //     while (end > start && (formulaStr.charAt(end - 1) == " " || formulaStr.charAt(end - 1) == "\t"))
+  //       end--;  // Adjust position to eliminate whitespace
+  //     if (start == end)
+  //       end++;
+
+  //     appendText(formulaStr.substring(0, start), codeOutElem);
+  //     var highlight = document.createElement("u");
+  //     if (end <= formulaStr.length) {
+  //       appendText(formulaStr.substring(start, end), highlight);
+  //       codeOutElem.appendChild(highlight);
+  //       appendText(formulaStr.substring(end, formulaStr.length), codeOutElem);
+  //     } else {
+  //       appendText(" ", highlight);
+  //       codeOutElem.appendChild(highlight);
+  //     }
+
+  //   } else {
+  //     setMessage("Assertion error");
+  //   }
+  //   return;
+  // }
+
+  // try {
+  //   var matrix = buildMatrix(eqn);                // Set up matrix
+  //   solve(matrix);                                // Solve linear system
+  //   var coefs = extractCoefficients(matrix);      // Get coefficients
+  //   checkAnswer(eqn, coefs);                      // Self-test, should not fail
+  //   balancedElem.appendChild(eqn.toHtml(coefs));  // Display balanced equation
+  // } catch (e) {
+  //   setMessage(e.toString());
+  // }
   var eqn;
   try {
     eqn = parse(formulaStr);
   } catch (e) {
     if (typeof e == "string") {  // Simple error message string
       setMessage("Syntax error: " + e);
-
     } else if ("start" in e) {  // Error message object with start and possibly end character indices
       setMessage("Syntax error: " + e.message);
-
       var start = e.start;
       var end = "end" in e ? e.end : e.start;
       while (end > start && (formulaStr.charAt(end - 1) == " " || formulaStr.charAt(end - 1) == "\t"))
         end--;  // Adjust position to eliminate whitespace
       if (start == end)
         end++;
-
       appendText(formulaStr.substring(0, start), codeOutElem);
       var highlight = document.createElement("u");
       if (end <= formulaStr.length) {
@@ -39,7 +85,6 @@ function balance(formulaStr) {
         appendText(" ", highlight);
         codeOutElem.appendChild(highlight);
       }
-
     } else {
       setMessage("Assertion error");
     }
@@ -75,43 +120,79 @@ function demo(formulaStr, index) {
 }
 
 
-var RANDOM_DEMOS = [
-  "H2 + O2 = H2O",
-  "Fe + Cl2 = FeCl3",
-  "Fe + O2 = Fe2O3",
-  "NH3 + O2 = N2 + H2O",
-  "C2H2 + O2 = CO2 + H2O",
-  "C3H8O + O2 = CO2 + H2O",
-  "Na + O2 = Na2O",
-  "P4 + O2 = P2O5",
-  "Na2O + H2O = NaOH",
-  "Mg + HCl = MgCl2 + H2",
-  "AgNO3 + LiOH = AgOH + LiNO3",
-  "Pb + PbO2 + H^+ + SO4^2- = PbSO4 + H2O",
-  "HNO3 + Cu = Cu(NO3)2 + H2O + NO",
-  "KNO2 + KNO3 + Cr2O3 = K2CrO4 + NO",
-  "AgNO3 + BaCl2 = Ba(NO3)2 + AgCl",
-  "Cu(NO3)2 = CuO + NO2 + O2",
-  "Al + CuSO4 = Al2(SO4)3 + Cu",
-  "Na3PO4 + Zn(NO3)2 = NaNO3 + Zn3(PO4)2",
-  "Cl2 + Ca(OH)2 = Ca(ClO)2 + CaCl2 + H2O",
-  "CHCl3 + O2 = CO2 + H2O + Cl2",
-  "H2C2O4 + MnO4^- = H2O + CO2 + MnO + OH^-",
-  "H2O2 + Cr2O7^2- = Cr^3+ + O2 + OH^-",
-  "KBr + KMnO4 + H2SO4 = Br2 + MnSO4 + K2SO4 + H2O",
-  "K2Cr2O7 + KI + H2SO4 = Cr2(SO4)3 + I2 + H2O + K2SO4",
-  "KClO3 + KBr + HCl = KCl + Br2 + H2O",
-  "Ag + HNO3 = AgNO3 + NO + H2O",
-  "P4 + OH^- + H2O = H2PO2^- + P2H4",
-  "Zn + NO3^- + H^+ = Zn^2+ + NH4^+ + H2O",
-  "ICl + H2O = Cl^- + IO3^- + I2 + H^+",
-  "AB2 + AC3 + AD5 + AE7 + AF11 + AG13 + AH17 + AI19 + AJ23 = A + ABCDEFGHIJ",
-  "KMnO4 + HCl = KCl + MnCl2 + H2O + Cl2",
-  "K4Fe(CN)6 + H2SO4 + H2O = K2SO4 + FeSO4 + (NH4)2SO4 + CO",
-  "C6H5COOH + O2 = CO2 + H2O",
-  "K4Fe(CN)6 + KMnO4 + H2SO4 = KHSO4 + Fe2(SO4)3 + MnSO4 + HNO3 + CO2 + H2O",
-];
+// var RANDOM_DEMOS = [
+//   "H2 + O2 = H2O",
+//   "Fe + Cl2 = FeCl3",
+//   "Fe + O2 = Fe2O3",
+//   "NH3 + O2 = N2 + H2O",
+//   "C2H2 + O2 = CO2 + H2O",
+//   "C3H8O + O2 = CO2 + H2O",
+//   "Na + O2 = Na2O",
+//   "P4 + O2 = P2O5",
+//   "Na2O + H2O = NaOH",
+//   "Mg + HCl = MgCl2 + H2",
+//   "AgNO3 + LiOH = AgOH + LiNO3",
+//   "Pb + PbO2 + H^+ + SO4^2- = PbSO4 + H2O",
+//   "HNO3 + Cu = Cu(NO3)2 + H2O + NO",
+//   "KNO2 + KNO3 + Cr2O3 = K2CrO4 + NO",
+//   "AgNO3 + BaCl2 = Ba(NO3)2 + AgCl",
+//   "Cu(NO3)2 = CuO + NO2 + O2",
+//   "Al + CuSO4 = Al2(SO4)3 + Cu",
+//   "Na3PO4 + Zn(NO3)2 = NaNO3 + Zn3(PO4)2",
+//   "Cl2 + Ca(OH)2 = Ca(ClO)2 + CaCl2 + H2O",
+//   "CHCl3 + O2 = CO2 + H2O + Cl2",
+//   "H2C2O4 + MnO4^- = H2O + CO2 + MnO + OH^-",
+//   "H2O2 + Cr2O7^2- = Cr^3+ + O2 + OH^-",
+//   "KBr + KMnO4 + H2SO4 = Br2 + MnSO4 + K2SO4 + H2O",
+//   "K2Cr2O7 + KI + H2SO4 = Cr2(SO4)3 + I2 + H2O + K2SO4",
+//   "KClO3 + KBr + HCl = KCl + Br2 + H2O",
+//   "Ag + HNO3 = AgNO3 + NO + H2O",
+//   "P4 + OH^- + H2O = H2PO2^- + P2H4",
+//   "Zn + NO3^- + H^+ = Zn^2+ + NH4^+ + H2O",
+//   "ICl + H2O = Cl^- + IO3^- + I2 + H^+",
+//   "AB2 + AC3 + AD5 + AE7 + AF11 + AG13 + AH17 + AI19 + AJ23 = A + ABCDEFGHIJ",
+//   "KMnO4 + HCl = KCl + MnCl2 + H2O + Cl2",
+//   "K4Fe(CN)6 + H2SO4 + H2O = K2SO4 + FeSO4 + (NH4)2SO4 + CO",
+//   "C6H5COOH + O2 = CO2 + H2O",
+//   "K4Fe(CN)6 + KMnO4 + H2SO4 = KHSO4 + Fe2(SO4)3 + MnSO4 + HNO3 + CO2 + H2O",
+// ];
 
+var RANDOM_DEMOS = [
+  "H2 + O2 → H2O",
+  "Fe + Cl2 → FeCl3",
+  "Fe + O2 → Fe2O3",
+  "NH3 + O2 → N2 + H2O",
+  "C2H2 + O2 → CO2 + H2O",
+  "C3H8O + O2 → CO2 + H2O",
+  "Na + O2 → Na2O",
+  "P4 + O2 → P2O5",
+  "Na2O + H2O → NaOH",
+  "Mg + HCl → MgCl2 + H2",
+  "AgNO3 + LiOH → AgOH + LiNO3",
+  "Pb + PbO2 + H^+ + SO4^2- → PbSO4 + H2O",
+  "HNO3 + Cu → Cu(NO3)2 + H2O + NO",
+  "KNO2 + KNO3 + Cr2O3 → K2CrO4 + NO",
+  "AgNO3 + BaCl2 → Ba(NO3)2 + AgCl",
+  "Cu(NO3)2 → CuO + NO2 + O2",
+  "Al + CuSO4 → Al2(SO4)3 + Cu",
+  "Na3PO4 + Zn(NO3)2 → NaNO3 + Zn3(PO4)2",
+  "Cl2 + Ca(OH)2 → Ca(ClO)2 + CaCl2 + H2O",
+  "CHCl3 + O2 → CO2 + H2O + Cl2",
+  "H2C2O4 + MnO4^- → H2O + CO2 + MnO + OH^-",
+  "H2O2 + Cr2O7^2- → Cr^3+ + O2 + OH^-",
+  "KBr + KMnO4 + H2SO4 → Br2 + MnSO4 + K2SO4 + H2O",
+  "K2Cr2O7 + KI + H2SO4 → Cr2(SO4)3 + I2 + H2O + K2SO4",
+  "KClO3 + KBr + HCl → KCl + Br2 + H2O",
+  "Ag + HNO3 → AgNO3 + NO + H2O",
+  "P4 + OH^- + H2O → H2PO2^- + P2H4",
+  "Zn + NO3^- + H^+ → Zn^2+ + NH4^+ + H2O",
+  "ICl + H2O → Cl^- + IO3^- + I2 + H^+",
+  "AB2 + AC3 + AD5 + AE7 + AF11 + AG13 + AH17 + AI19 + AJ23 → A + ABCDEFGHIJ",
+  "KMnO4 + HCl → KCl + MnCl2 + H2O + Cl2",
+  "K4Fe(CN)6 + H2SO4 + H2O → K2SO4 + FeSO4 + (NH4)2SO4 + CO",
+  "C6H5COOH + O2 → CO2 + H2O",
+  "K4Fe(CN)6 + KMnO4 + H2SO4 → KHSO4 + Fe2(SO4)3 + MnSO4 + HNO3 + CO2 + H2O",
+];
 var lastRandomIndex = -1;
 
 function random() {
@@ -422,6 +503,39 @@ function parse(formulaStr) {
 }
 
 // Parses and returns an equation.
+function parseEquation(tok) {
+  var lhs = [];
+  var rhs = [];
+
+  lhs.push(parseTerm(tok));
+  while (true) {
+    var next = tok.peek();
+    if (next == "→" || next == "=") { // Accept either arrow or equals sign
+      tok.consume(next); // Consume the operator
+      break;
+    } else if (next == null) {
+      throw { message: "Arrow or equals sign or end expected", start: tok.position() };
+    } else if (next == "+") {
+      tok.consume("+");
+      lhs.push(parseTerm(tok));
+    } else
+      throw { message: "Plus or arrow or equals sign expected", start: tok.position() };
+  }
+
+  rhs.push(parseTerm(tok));
+  while (true) {
+    var next = tok.peek();
+    if (next == null)
+      break;
+    else if (next == "+") {
+      tok.consume("+");
+      rhs.push(parseTerm(tok));
+    } else
+      throw { message: "Plus or end expected", start: tok.position() };
+  }
+
+  return new Equation(lhs, rhs);
+}
 // function parseEquation(tok) {
 //   var lhs = [];
 //   var rhs = [];
@@ -457,40 +571,72 @@ function parse(formulaStr) {
 // }
 
 // Parses and returns an equation.
-function parseEquation(tok) {
-  var lhs = [];
-  var rhs = [];
+// function parseEquation(tok) {
+//   var lhs = [];
+//   var rhs = [];
 
-  lhs.push(parseTerm(tok));
-  while (true) {
-    var next = tok.peek();
-    if (next == "=") {
-      tok.consume("=");
-      break;
-    } else if (next == null) {
-      throw { message: "Plus or equal sign expected", start: tok.position() };
-    } else if (next == "+") {
-      tok.consume("+");
-      lhs.push(parseTerm(tok));
-    } else
-      throw { message: "Plus expected", start: tok.position() };
-  }
+//   lhs.push(parseTerm(tok));
+//   while (true) {
+//     var next = tok.peek();
+//     if (next == "=") {
+//       tok.consume("=");
+//       break;
+//     } else if (next == null) {
+//       throw { message: "Plus or equal sign expected", start: tok.position() };
+//     } else if (next == "+") {
+//       tok.consume("+");
+//       lhs.push(parseTerm(tok));
+//     } else
+//       throw { message: "Plus expected", start: tok.position() };
+//   }
 
-  rhs.push(parseTerm(tok));
-  while (true) {
-    var next = tok.peek();
-    if (next == null)
-      break;
-    else if (next == "+") {
-      tok.consume("+");
-      rhs.push(parseTerm(tok));
-    } else
-      throw { message: "Plus or end expected", start: tok.position() };
-  }
+//   rhs.push(parseTerm(tok));
+//   while (true) {
+//     var next = tok.peek();
+//     if (next == null)
+//       break;
+//     else if (next == "+") {
+//       tok.consume("+");
+//       rhs.push(parseTerm(tok));
+//     } else
+//       throw { message: "Plus or end expected", start: tok.position() };
+//   }
 
-  return new Equation(lhs, rhs);
-}
+//   return new Equation(lhs, rhs);
+// }
+// function parseEquation(tok) {
+//   var lhs = [];
+//   var rhs = [];
 
+//   lhs.push(parseTerm(tok));
+//   while (true) {
+//     var next = tok.peek();
+//     if (next == "→") { // Check for arrow instead of equals sign
+//       tok.consume("→");
+//       break;
+//     } else if (next == null) {
+//       throw { message: "Arrow or end expected", start: tok.position() };
+//     } else if (next == "+") {
+//       tok.consume("+");
+//       lhs.push(parseTerm(tok));
+//     } else
+//       throw { message: "Plus or arrow expected", start: tok.position() };
+//   }
+
+//   rhs.push(parseTerm(tok));
+//   while (true) {
+//     var next = tok.peek();
+//     if (next == null)
+//       break;
+//     else if (next == "+") {
+//       tok.consume("+");
+//       rhs.push(parseTerm(tok));
+//     } else
+//       throw { message: "Plus or end expected", start: tok.position() };
+//   }
+
+//   return new Equation(lhs, rhs);
+// }
 
 // Parses and returns a term.
 function parseTerm(tok) {
@@ -556,6 +702,58 @@ function parseTerm(tok) {
   return new Term(items, charge);
 }
 
+// function wordEquation(equation) {
+//   var lhs = equation.getLeftSide();
+//   var rhs = equation.getRightSide();
+//   var lhsElements = new Set();
+//   var rhsElements = new Set();
+//   var lhsDescription = "The reactants are ";
+//   var rhsDescription = " and produce ";
+
+//   // Collect elements from both sides
+//   lhs.forEach(function (term) {
+//     term.getItems().forEach(function (item) {
+//       item.getElements(lhsElements);
+//     });
+//   });
+
+//   rhs.forEach(function (term) {
+//     term.getItems().forEach(function (item) {
+//       item.getElements(rhsElements);
+//     });
+//   });
+
+//   // Construct descriptions
+//   lhs.forEach(function (term, index) {
+//     var description = term.toHtml().outerHTML;
+//     if (index > 0) description = " + " + description;
+//     lhsDescription += description;
+//   });
+
+//   rhs.forEach(function (term, index) {
+//     var description = term.toHtml().outerHTML;
+//     if (index > 0) description = " + " + description;
+//     rhsDescription += description;
+//   });
+
+//   // Determine if any elements change state
+//   var stateChange = false;
+//   lhsElements.forEach(function (element) {
+//     if (!rhsElements.has(element)) {
+//       stateChange = true;
+//     }
+//   });
+
+//   // Construct final sentence
+//   var finalSentence = lhsDescription + " react to form " + rhsDescription;
+//   if (stateChange) {
+//     finalSentence += " with a change in state.";
+//   } else {
+//     finalSentence += ".";
+//   }
+
+//   return finalSentence;
+// }
 
 // Parses and returns a group.
 function parseGroup(tok) {
@@ -618,7 +816,7 @@ function Tokenizer(str) {
     if (i == str.length)  // End of stream
       return null;
 
-    var match = /^([A-Za-z][a-z]*|[0-9]+|[+\-^=()])/.exec(str.substring(i));
+    var match = /^([A-Za-z][a-z]*|[0-9]+|[+\-^→=()])/.exec(str.substring(i));
     if (match == null)
       throw { message: "Invalid symbol", start: i };
     return match[0];
